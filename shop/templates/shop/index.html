@@ -65,7 +65,9 @@
                           <div class="card-body">
                               <h5 class="card-title">{{i.product_name}}</h5>
                               <p class="card-text">{{i.des|slice:"0:53"}}...</p>
+                              <span id="divpr{{i.id}}" class="divpr">
                               <button id="pr{{i.id}}" class="btn btn-primary cart">Add to Cart</button>
+                              </span>
                               <a href="/shop/products/{{i.id}}"><button id="qv{{i.id}}" class="btn btn-primary cart">QuickView</button></a>
                           </div>
                       </div>
@@ -98,6 +100,7 @@ if(localStorage.getItem('cart') == null){
 else{
   cart = JSON.parse(localStorage.getItem('cart'));
   document.getElementById('cart').innerHTML = Object.keys(cart).length;
+  updateCart(cart);
 }
 $('.cart').click(function(){
   var idstr = this.id.toString();
@@ -107,9 +110,29 @@ $('.cart').click(function(){
   else{
     cart[idstr] = 1;
   }
-  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCart(cart);
 });
 $('#popcart').popover()
 document.getElementById('popcart').setAttribute('data-content', '<h5>Cart kuch bhi bada content likhna tha isliye me ye likh ra hu</h5>');
+function updateCart(cart){
+  for (var item in cart){
+    document.getElementById('div'+item).innerHTML = "<button id='minus" + item +"' class='btn btn-primary minus'>-</button><span id ='val" +item+"'>" +cart[item] + "</span><button id='plus" +item+ "' class='btn btn-primary plus'> + </button>";
+  }
+  localStorage.setItem('cart', JSON.stringify(cart));
+  document.getElementById('cart').innerHTML = Object.keys(cart).length;
+}
+$('.divpr').on("click","button.minus", function(){
+  a = this.id.slice(7, );
+  cart['pr'+a] = cart['pr'+a] - 1
+  cart['pr'+a] = Math.max(0, cart['pr'+a])
+  document.getElementById('valpr'+a).innerHTML = cart['pr'+a];
+  updateCart(cart);
+});
+$('.divpr').on("click","button.plus", function(){
+  a = this.id.slice(6, );
+  cart['pr'+a] = cart['pr'+a] + 1
+  document.getElementById('valpr'+a).innerHTML = cart['pr'+a];
+  updateCart(cart);
+});
 </script>
 {% endblock js %}
