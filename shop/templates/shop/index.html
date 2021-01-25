@@ -20,7 +20,10 @@
   }
 
   body .carousel-indicators {
-    bottom: 0;
+    bottom: -30px;
+  }
+  .carousel-indicators li{
+      background-color: #7270fc;
   }
 
   body .carousel-control-prev-icon,
@@ -63,7 +66,7 @@
                       <div class="card align-items-center" style="width: 18rem;">
                           <img src='/media/{{i.image}}' class="card-img-top" alt="...">
                           <div class="card-body">
-                              <h5 class="card-title" id="namepr{{i.id}}">{{i.product_name}}</h5>
+                              <h5 class="card-title" id="namepr{{i.id}}">{{i.product_name|slice:"0:35"}}...</h5>
                               <p class="card-text">{{i.des|slice:"0:53"}}...</p>
                               <h4 class="card-title">Price: <span id="pricepr{{i.id}}">{{i.price}}</span></h4>
                               <span id="divpr{{i.id}}" class="divpr">
@@ -164,7 +167,14 @@ $('.divpr').on("click", "button.minus", function() {
     a = this.id.slice(7, );
     cart['pr' + a][0] = cart['pr' + a][0] - 1;
     cart['pr' + a][0] = Math.max(0, cart['pr' + a][0]);
-    document.getElementById('valpr' + a).innerHTML = cart['pr' + a][0];
+    // document.getElementById('valpr' + a).innerHTML = cart['pr' + a][0];
+    if (cart['pr'+ a][0] == 0){
+        document.getElementById('divpr'+a).innerHTML = '<button id="pr'+a+'" class="btn btn-primary cart">Add To Cart</button>'
+        delete cart['pr'+a];
+    }
+    else{
+        document.getElementById('valpr' + a).innerHTML = cart['pr' + a][0];
+    }
     updateCart(cart);
 });
 $('.divpr').on("click", "button.plus", function() {
